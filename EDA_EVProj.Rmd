@@ -36,7 +36,7 @@ EV_data <- read.csv("data_ZEV_asthmaED_2013_2022.csv")
 
 ```{r}
 #Getting number of EVs per 1000 people
-nZEV1000pop <- EV_data$nZEV/EV_data$pop *1000
+EV_data$nZEV1000pop <- EV_data$nZEV/EV_data$pop *1000
 #RoA = Rate of Asthma
 log_AgeAdj_RoA_ED_Visit_Rate <- log(EV_data$Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate)
 #Getting LN to help create better plots 
@@ -52,7 +52,74 @@ SD=sd(EV_data$Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate))
 ```
 
 ```{r}
-#Summary Stats by each year
-tapply(EV_data$Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate)
+#Summary Stats by each years
+cat("Summary Statistics of Asthma ED Visit Rates by Year:\n")
+print(tapply(EV_data$Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate, EV_data$yr, summary, na.rm = TRUE))
+
+cat("\nStandard Deviation by Year:\n")
+print(tapply(EV_data$Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate , EV_data$yr , sd, na.rm = TRUE))
+
+```
+
+```{r}
+tapply(EV_data$nZEV, EV_data$yr, summary, na.rm = TRUE) 
+tapply(EV_data$nZEV, EV_data$yr, sd,      na.rm = TRUE)
+
+```
+```{r}
+tapply(EV_data$nZEV1000pop , EV_data$yr, summary, na.rm = TRUE) 
+tapply(EV_data$nZEV1000pop , EV_data$yr, sd,      na.rm = TRUE)
+```
+```{r} 
+tapply(EV_data$pop , EV_data$yr, summary, na.rm = TRUE) 
+tapply(EV_data$pop , EV_data$yr, sd,      na.rm = TRUE)
+```
+
+```{r}
+tapply(EV_data$percPoverty , EV_data$yr, summary, na.rm = TRUE) 
+tapply(EV_data$percPoverty , EV_data$yr, sd,      na.rm = TRUE)
+```
+
+```{r}
+tapply(EV_data$HHincomeMedian , EV_data$yr, summary, na.rm = TRUE) 
+tapply(EV_data$HHincomeMedian , EV_data$yr, sd,      na.rm = TRUE)
+```
+
+```{r}
+tapply(EV_data$HHincomeMean , EV_data$yr, summary, na.rm = TRUE) 
+tapply(EV_data$HHincomeMean , EV_data$yr, sd,      na.rm = TRUE)
+```
+
+```{r}
+tapply(EV_data$EDUCpercHSplus , EV_data$yr, summary, na.rm = TRUE) 
+tapply(EV_data$EDUCpercHSplus , EV_data$yr, sd,      na.rm = TRUE)
+```
+
+```{r}
+tapply(EV_data$EDUCpercBAplus , EV_data$yr, summary, na.rm = TRUE) 
+tapply(EV_data$EDUCpercBAplus , EV_data$yr, sd,      na.rm = TRUE)
+```
+```{r}
+
+#New dataset with just the variables of interest for Corr. Matrix
+
+library(corrplot)
+
+corr_EV_data_vars <- EV_data[, c(
+  "nZEV",                      # number of electric vehicles
+  "nZEV1000pop",              # EVs per 1000 people (you created this)
+  "pop",                      # population
+  "Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate",  # asthma outcome
+  "percPoverty",              # poverty %
+  "HHincomeMedian",           # median income
+  "HHincomeMean",             # mean income
+  "EDUCpercHSplus",           # % with high school education or higher
+  "EDUCpercBAplus"            # % with bachelor’s degree or higher
+)]
+
+corr_EV_data_matrix <- cor(corr_EV_data_vars, use = "complete.obs")
+print(corr_EV_data_matrix)
+
+
 ```
 
