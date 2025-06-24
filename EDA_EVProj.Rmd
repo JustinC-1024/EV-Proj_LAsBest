@@ -31,7 +31,7 @@ Note that the `echo = FALSE` parameter was added to the code chunk to prevent pr
 
 ```{r}
 getwd()
-EV_data <- read.csv("data_ZEV_asthmaED_2013_2022.csv")
+EV_data <- read.csv("./Data/data_ZEV_asthmaED_2013_2022.csv")
 ```
 
 ```{r}
@@ -121,5 +121,35 @@ corr_EV_data_matrix <- cor(corr_EV_data_vars, use = "complete.obs")
 print(corr_EV_data_matrix)
 
 
+```
+```{r}
+
+library(ggplot2)
+
+zip = unique(EV_data$zip)
+set.seed(100)
+zip100 = sample(zip, 100)
+EV_data_100 = EV_data[EV_data$zip %in% zip100,  ] 
+
+#spaghetti plot
+ggplot(EV_data_100, aes(x = yr, y = Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate, group = zip)) +
+  geom_line(color = "gray") +
+  labs(
+    title = "Asthma ED Visit Rate by Zip Code (Spaghetti Plot)",
+    x = "Year",
+    y = "ED Visit Rate"
+  )
+
+
+```
+```{r}
+#spaghetti plot
+ggplot(EV_data, aes(x = yr, y = , group = zip)) +
+  geom_line(color = "gray") +
+  labs(
+    title = "Asthma ED Visit Rate by Zip Code (Spaghetti Plot)",
+    x = "Year",
+    y = "ED Visit Rate"
+  )
 ```
 
