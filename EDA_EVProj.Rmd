@@ -128,3 +128,25 @@ p
 
 ```
 
+
+```{r}
+
+paste("Length:",length(unique(EV_data$zip)))
+
+paste("Mean of population:", mean(EV_data$pop))
+paste("Paste of population:", max(EV_data$pop))
+paste("Min of population",min(EV_data$pop))
+
+paste("Mean of mean",mean(EV_data$EDUCpercHSplus))
+sd(EV_data$EDUCpercHSplus)
+
+mean(EV_data$EDUCpercBAplus)
+sd(EV_data$EDUCpercBAplus)
+
+median(EV_data$HHincomeMedian)
+sd(EV_data$HHincomeMedian)
+
+mean(EV_data$percPoverty)
+sd(EV_data$percPoverty)
+
+```
