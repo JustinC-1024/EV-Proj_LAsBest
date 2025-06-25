@@ -2,7 +2,9 @@
 title: "LAs BEST Project"
 author: "Justin Coles"
 date: "2025-06-20"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -21,7 +23,7 @@ EV_data <- read.csv("./Data/data_ZEV_asthmaED_2013_2022.csv")
 #Getting number of EVs per 1000 people
 EV_data$nZEV1000pop <- EV_data$nZEV/EV_data$pop *1000
 #RoA = Rate of Asthma
-log_AgeAdj_RoA_ED_Visit_Rate <- log(EV_data$Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate)
+EV_Data$log_AgeAdj_RoA_ED_Visit_Rate <- log(EV_data$Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate)
 #Getting LN to help create better plots 
 ```
 
@@ -131,10 +133,10 @@ p
 
 ```{r}
 
-paste("Length:",length(unique(EV_data$zip)))
+paste("Number of ZipCo:",length(unique(EV_data$zip)))
 
 paste("Mean of population:", mean(EV_data$pop))
-paste("Paste of population:", max(EV_data$pop))
+paste("Max of population:", max(EV_data$pop))
 paste("Min of population",min(EV_data$pop))
 
 paste("Mean of mean",mean(EV_data$EDUCpercHSplus))
@@ -150,3 +152,16 @@ mean(EV_data$percPoverty)
 sd(EV_data$percPoverty)
 
 ```
+```{r}
+EV_data |> filter(yr == 2013) |> tbl_summary(include = c(pop,HHincomeMedian,percPoverty,EDUCpercHSplus,EDUCpercBAplus),
+                       statistic = list(all_continuous() ~ "{mean} ({sd})"))
+```
+
+```{r}
+EV_data |> filter(yr %in% c(2013,2018,2022)) |> 
+        mutate(yr = as.factor(yr)) |>
+        tbl_summary(include = c(pop,HHincomeMedian,percPoverty,EDUCpercHSplus,EDUCpercBAplus),
+                       statistic = list(all_continuous() ~ "{mean} ({sd})"),
+                    by = yr )
+```
+
