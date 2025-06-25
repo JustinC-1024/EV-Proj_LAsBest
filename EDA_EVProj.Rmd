@@ -107,9 +107,9 @@ library(corrplot)
 
 corr_EV_data_vars <- EV_data[, c(
   "nZEV",                      # number of electric vehicles
-  "nZEV1000pop",              # EVs per 1000 people (you created this)
+  "nZEV1000pop",              # EVs per 1000 people
   "pop",                      # population
-  "Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate",  # asthma outcome
+  "Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate",  # asthma outcomlie
   "percPoverty",              # poverty %
   "HHincomeMedian",           # median income
   "HHincomeMean",             # mean income
@@ -151,5 +151,28 @@ ggplot(EV_data, aes(x = yr, y = , group = zip)) +
     x = "Year",
     y = "ED Visit Rate"
   )
+```
+
+```{r}
+library(gtsummary)
+library(dplyr)
+
+EV_data %>%
+  filter(yr %in% c(2013, 2017, 2022)) %>%
+  mutate(yr = as.factor(yr)) %>%
+  tbl_summary(
+    include = c(nZEV, Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate),
+    statistic = list(all_continuous() ~ "{mean} ({sd})"),
+    by = yr
+  ) %>%
+  
+  add_overall()
+
+
+```
+
+```{r}
+
+            
 ```
 
