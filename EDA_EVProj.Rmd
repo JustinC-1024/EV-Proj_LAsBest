@@ -31,7 +31,6 @@ Note that the `echo = FALSE` parameter was added to the code chunk to prevent pr
 
 ```{r}
 getwd()
-EV_data <- read.csv("data_ZEV_asthmaED_2013_2022.csv")
 EV_data <- read.csv("./Data/data_ZEV_asthmaED_2013_2022.csv")
 ```
 
@@ -154,74 +153,29 @@ hist(EV_data$EDUCpercHSplus, main = 'HS Education', xlab = '% of 25+ w/ High Sch
 hist(EV_data$EDUCpercBAplus, main ='BA Education', xlab = "% of 25+ w/ Bachelor's Degree")
 ```
 
-```{r}
-
-# ##spaghetti plot
-# EV_data$nZEV <- as.numeric(as.character(EV_data$nZEV))
-# EV_data_100$nZEV <- as.numeric(as.character(EV_data_100$nZEV))
-# zip <- unique(EV_data$zip)
-# set.seed(99)
-# zip100 <- sample(zip,100)
-# EV_data_100 = EV_data[EV_data$zip %in% zip100, ]
-# #?ggplot2
-# 
-# p <- ggplot(data = EV_data_100, aes(x = yr, y = nZEV, group = zip)) + 
-#   geom_point() + 
-#   geom_line() + 
-#   ggtitle("100 Randomly Selected ZipCodes") +
-#   xlab("Year") + 
-#   ylab("Number of Zero Emission Vehicles") + 
-#   
-#   scale_y_continuous(breaks = seq(0, 5000, by = 1200) 
-# )
-# p
-
-# zip = unique(EV_data$zip)Add commentMore actions
-# set.seed(100)
-# zip100 = sample(zip, 100)
-# EV_data_100 = EV_data[EV_data$zip %in% zip100,  ] 
-# 
-# #spaghetti plot
-# ggplot(EV_data_100, aes(x = yr, y = Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate, group = zip)) +
-#   geom_line(color = "gray") +
-#   labs(
-#     title = "Asthma ED Visit Rate by Zip Code (Spaghetti Plot)",
-#     x = "Year",
-#     y = "ED Visit Rate"
-#   )
-# 
-# 
-# ```
-# ```{r}
-# #spaghetti plot
-# ggplot(EV_data, aes(x = yr, y = , group = zip)) +
-#   geom_line(color = "gray") +
-#   labs(
-#     title = "Asthma ED Visit Rate by Zip Code (Spaghetti Plot)",
-#     x = "Year",
-#     y = "ED Visit Rate"
-#   )
-```
 
 ```{r}
+#EV spaghetti plot
 EV_data$Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate <- as.numeric(as.character(EV_data$Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate))
-
+library(scales)
 zip = unique(EV_data$zip)
 set.seed(100)
 zip100 = sample(zip, 100)
 EV_data_100 = EV_data[EV_data$zip %in% zip100,  ]
 library(ggplot2)
-EV_data <- within(EV_data, {
+EV_data_100 <- within(EV_data_100, {
   yr <- factor(yr)
   zip <- factor(zip)
-  ED <- EV_data$Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate
+  ED <- Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate
 })
 
-require(ggplot2)
 p <- ggplot(data = EV_data_100, aes(x = yr, y = ED ,group = zip, color = ED)) +
 geom_point(size = 1.5) + 
   geom_line() + 
-  scale_color_gradient(low = "blue", high = "red") + 
+  scale_color_gradientn(
+    colors = c("black", "darkred", "red"),
+    values = rescale(c(0, 500, 5000))) +
+  theme_classic() +
   ggtitle("100 Randomly Selected ZipCodes") +
   xlab("Year") + 
   ylab("Age Adjusted Rate of Asthma ED Visits") + 
@@ -231,14 +185,14 @@ theme_minimal()
 p
 ```
 ```{r}
-##spaghetti plot
+#nZEV spaghetti plot
 EV_data$nZEV <- as.numeric(as.character(EV_data$nZEV))
 EV_data_100$nZEV <- as.numeric(as.character(EV_data_100$nZEV))
 zip <- unique(EV_data$zip)
 set.seed(99)
 zip100 <- sample(zip,100)
 EV_data_100 = EV_data[EV_data$zip %in% zip100, ]
-?ggplot2
+
 library(scales)
 p <- ggplot(data = EV_data_100, aes(x = yr, y = nZEV, group = zip, color = nZEV)) + 
   geom_point(size = 1.5) + 
@@ -247,7 +201,6 @@ p <- ggplot(data = EV_data_100, aes(x = yr, y = nZEV, group = zip, color = nZEV)
     colors = c("black", "darkred", "red"),
     values = rescale(c(0, 500, 5000))) +
   theme_classic() +
-  #scale_color_gradient(low = "black", high = "red") +
 
   ggtitle("100 Randomly Selected ZipCodes") +
   xlab("Year") + 
@@ -256,41 +209,4 @@ p <- ggplot(data = EV_data_100, aes(x = yr, y = nZEV, group = zip, color = nZEV)
   scale_y_continuous(breaks = seq(0, 5000, by = 1200))
 theme_minimal()
 p
-```
-
-```{r}
-#t-test 
-# data1 = c(EV_data$nZEV)
-# data2 = c(EV_data$Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate)
-# result1 = t.test(data1,data2, alternative ="two.sided", conf.level = 0.95)
-# result1$conf.int
-# result1
-# 
-# sdnZEV = sd(EV_data$nZEV)
-# sdRoA = sd(EV_data$Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate)
-# 
-# sdnZEV
-# sdRoA
-
-# use generalized additive mixed model, random intercept 
-
-```
-```{r}
-#paste("Length:",length(unique(EV_data$zip)))
-#
-#paste("Mean of population:", mean(EV_data$pop))
-#paste("Paste of population:", max(EV_data$pop))
-#paste("Min of population",min(EV_data$pop))
-#
-#paste("Mean of mean",mean(EV_data$EDUCpercHSplus))
-#sd(EV_data$EDUCpercHSplus)
-#
-#mean(EV_data$EDUCpercBAplus)
-#sd(EV_data$EDUCpercBAplus)
-#
-#median(EV_data$HHincomeMedian)
-#sd(EV_data$HHincomeMedian)
-#
-#mean(EV_data$percPoverty)
-#sd(EV_data$percPoverty)
 ```
