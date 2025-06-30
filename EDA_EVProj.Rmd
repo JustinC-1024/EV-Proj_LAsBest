@@ -2,11 +2,14 @@
 title: "LAs BEST Project"
 author: "Justin Coles"
 date: "2025-06-20"
-output: html_document
+output:
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+# tinytex::install_tinytex()
+
 ```
 
 ## R Markdown
@@ -38,7 +41,7 @@ EV_data <- read.csv("./Data/data_ZEV_asthmaED_2013_2022.csv")
 #Getting number of EVs per 1000 people
 EV_data$nZEV1000pop <- EV_data$nZEV/EV_data$pop *1000
 #RoA = Rate of Asthma
-log_AgeAdj_RoA_ED_Visit_Rate <- log(EV_data$Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate)
+EV_data$log_AgeAdj_RoA_ED_Visit_Rate <- log(EV_data$Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate)
 #Getting LN to help create better plots 
 ```
 
@@ -143,14 +146,6 @@ ggplot(EV_data_100, aes(x = yr, y = Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate, g
 
 ```
 ```{r}
-#spaghetti plot
-ggplot(EV_data, aes(x = yr, y = , group = zip)) +
-  geom_line(color = "gray") +
-  labs(
-    title = "Asthma ED Visit Rate by Zip Code (Spaghetti Plot)",
-    x = "Year",
-    y = "ED Visit Rate"
-  )
 ```
 
 ```{r}
