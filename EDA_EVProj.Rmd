@@ -3,17 +3,11 @@ title: "LAs BEST Project"
 author: "Justin Coles"
 date: "2025-06-20"
 output:
-<<<<<<< HEAD
-=======
-  pdf_document: default
->>>>>>> main
-  html_document: default
----
+
+html_document: default
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-<<<<<<< HEAD
-# tinytex::install_tinytex()
 
 ```
 
@@ -32,12 +26,9 @@ summary(cars)
 You can also embed plots, for example:
 
 ```{r pressure, echo=FALSE}
-plot(pressure)
-=======
 library(ggplot2)
 library(dplyr)
 library(gtsummary)
->>>>>>> main
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
@@ -64,6 +55,9 @@ SD=sd(EV_data$Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate))
 summary_stats_allyrs
 #mean(41.90) --> #there are about 41.90 visits to ED per 10,000ppl
 #Sd(28.98) --> there is huge variance between zip codes and ppl in ED 
+```
+```{r}
+sum(is.na(EV_data))
 ```
 
 ```{r}
@@ -137,29 +131,6 @@ print(corr_EV_data_matrix)
 
 
 ```
-```{r}
-<<<<<<< HEAD
-
-library(ggplot2)
-
-zip = unique(EV_data$zip)
-set.seed(100)
-zip100 = sample(zip, 100)
-EV_data_100 = EV_data[EV_data$zip %in% zip100,  ] 
-
-#spaghetti plot
-ggplot(EV_data_100, aes(x = yr, y = Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate, group = zip)) +
-  geom_line(color = "gray") +
-  labs(
-    title = "Asthma ED Visit Rate by Zip Code (Spaghetti Plot)",
-    x = "Year",
-    y = "ED Visit Rate"
-  )
-
-
-```
-```{r}
-```
 
 ```{r}
 library(gtsummary)
@@ -180,9 +151,7 @@ EV_data %>%
 ```
 
 ```{r}
-
-            
-```
+set.seed(99)
 EV_data$nZEV <- as.numeric(as.character(EV_data$nZEV))
 
 zip <- unique(EV_data$zip)
@@ -204,9 +173,89 @@ p <- ggplot(data = EV_data_100, aes(x = yr, y = nZEV, group = zip)) +
   scale_y_continuous(breaks = seq(0, 5000, by = 1200) 
 )
 p
-
 ```
 
+```{r}
+par(mfrow = c(1,3))
+#Histograms of RoA, ZEVs, Population
+hist(EV_data$Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate, main = 'Rate of Asthma', xlab = 'Age Adjusted Rate of Asthma')
+#hist(log_AgeAdj_RoA_ED_Visit_Rate, main = 'Log of Rate of Asthma', xlab = 'Age Adjusted Rate of Asthma')
+hist(EV_data$nZEV, main ='Zero Emission Vehicles', xlab = '# of Zero Emission Vehicles')
+hist(EV_data$pop, main ='Population', xlab = 'Population Count')
+```
+
+```{r}
+#Histograms of Poverty rate, Median Income, Mean Income
+par(mfrow = c(1,3))
+
+hist(EV_data$percPoverty, main = 'Poverty Rate', xlab = 'Percent of Poverty')
+hist(EV_data$HHincomeMedian, main ='Median Income', xlab = 'Annual Income')
+hist(EV_data$HHincomeMean, main ='Mean Income', xlab = 'Annual Income')
+```
+
+```{r}
+par(mfrow = c(1,2))
+#Histograms of HS Education, BA Education
+hist(EV_data$EDUCpercHSplus, main = 'HS Education', xlab = '% of 25+ w/ High School Diploma')
+hist(EV_data$EDUCpercBAplus, main ='BA Education', xlab = "% of 25+ w/ Bachelor's Degree")
+```
+
+
+```{r}
+#EV spaghetti plot
+EV_data$Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate <- as.numeric(as.character(EV_data$Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate))
+library(scales)
+zip = unique(EV_data$zip)
+set.seed(100)
+zip100 = sample(zip, 100)
+EV_data_100 = EV_data[EV_data$zip %in% zip100,  ]
+library(ggplot2)
+EV_data_100 <- within(EV_data_100, {
+  yr <- factor(yr)
+  zip <- factor(zip)
+  ED <- Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate
+})
+
+p <- ggplot(data = EV_data_100, aes(x = yr, y = ED ,group = zip, color = ED)) +
+geom_point(size = 1.5) + 
+  geom_line() + 
+  scale_color_gradientn(
+    colors = c("black", "darkred", "red"),
+    values = rescale(c(0, 500, 5000))) +
+  theme_classic() +
+  ggtitle("100 Randomly Selected ZipCodes") +
+  xlab("Year") + 
+  ylab("Age Adjusted Rate of Asthma ED Visits") + 
+  
+ scale_y_continuous(breaks = seq(0, 5000, by = 1200)) +
+theme_minimal()
+p
+```
+```{r}
+#nZEV spaghetti plot
+EV_data$nZEV <- as.numeric(as.character(EV_data$nZEV))
+EV_data_100$nZEV <- as.numeric(as.character(EV_data_100$nZEV))
+zip <- unique(EV_data$zip)
+set.seed(99)
+zip100 <- sample(zip,100)
+EV_data_100 = EV_data[EV_data$zip %in% zip100, ]
+
+library(scales)
+p <- ggplot(data = EV_data_100, aes(x = yr, y = nZEV, group = zip, color = nZEV)) + 
+  geom_point(size = 1.5) + 
+  geom_line() +
+   scale_color_gradientn(
+    colors = c("black", "darkred", "red"),
+    values = rescale(c(0, 500, 5000))) +
+  theme_classic() +
+
+  ggtitle("100 Randomly Selected ZipCodes") +
+  xlab("Year") + 
+  ylab("Number of Zero Emission Vehicles") + 
+  scale_y_continuous(breaks = seq(0, 5000, by = 1200))
+theme_minimal()
+p
+```
 
 ```{r}
 
