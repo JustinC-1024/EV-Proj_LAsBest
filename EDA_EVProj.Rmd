@@ -2,43 +2,30 @@
 title: "LAs BEST Project"
 author: "Justin Coles"
 date: "2025-06-20"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-```
-
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+library(ggplot2)
+library(dplyr)
+library(gtsummary)
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
 
 ```{r}
 getwd()
-EV_data <- read.csv("data_ZEV_asthmaED_2013_2022.csv")
+EV_data <- read.csv("./Data/data_ZEV_asthmaED_2013_2022.csv")
 ```
 
 ```{r}
 #Getting number of EVs per 1000 people
 EV_data$nZEV1000pop <- EV_data$nZEV/EV_data$pop *1000
 #RoA = Rate of Asthma
-log_AgeAdj_RoA_ED_Visit_Rate <- log(EV_data$Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate)
+EV_data$log_AgeAdj_RoA_ED_Visit_Rate <- log(EV_data$Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate)
 #Getting LN to help create better plots 
 ```
 
@@ -47,6 +34,8 @@ log_AgeAdj_RoA_ED_Visit_Rate <- log(EV_data$Age_Adjusted_Rate_of_Asthma_ED_Visit
 summary_stats_allyrs <- c(
 summary(EV_data$Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate),
 SD=sd(EV_data$Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate))
+
+summary_stats_allyrs
 #mean(41.90) --> #there are about 41.90 visits to ED per 10,000ppl
 #Sd(28.98) --> there is huge variance between zip codes and ppl in ED 
 ```
@@ -122,4 +111,65 @@ print(corr_EV_data_matrix)
 
 
 ```
+```{r}
+##spaghetti plot
+set.seed(99)
 
+EV_data$nZEV <- as.numeric(as.character(EV_data$nZEV))
+
+zip <- unique(EV_data$zip)
+zip100 <- sample(zip,100)
+
+EV_data_100 = EV_data[EV_data$zip %in% zip100, ]
+EV_data_100$nZEV <- as.numeric(as.character(EV_data_100$nZEV))
+
+
+
+
+p <- ggplot(data = EV_data_100, aes(x = yr, y = nZEV, group = zip)) + 
+  geom_point() + 
+  geom_line() + 
+  ggtitle("100 Randomly Selected ZipCodes") +
+  xlab("Year") + 
+  ylab("Number of Zero Emission Vehicles") + 
+  
+  scale_y_continuous(breaks = seq(0, 5000, by = 1200) 
+)
+p
+
+```
+
+
+```{r}
+
+paste("Number of ZipCo:",length(unique(EV_data$zip)))
+
+paste("Mean of population:", mean(EV_data$pop))
+paste("Max of population:", max(EV_data$pop))
+paste("Min of population",min(EV_data$pop))
+
+paste("Mean of mean",mean(EV_data$EDUCpercHSplus))
+sd(EV_data$EDUCpercHSplus)
+
+mean(EV_data$EDUCpercBAplus)
+sd(EV_data$EDUCpercBAplus)
+
+median(EV_data$HHincomeMedian)
+sd(EV_data$HHincomeMedian)
+
+mean(EV_data$percPoverty)
+sd(EV_data$percPoverty)
+
+```
+```{r}
+EV_data |> filter(yr == 2013) |> tbl_summary(include = c(pop,HHincomeMedian,percPoverty,EDUCpercHSplus,EDUCpercBAplus),
+                       statistic = list(all_continuous() ~ "{mean} ({sd})"))
+```
+
+```{r}
+EV_data |> filter(yr %in% c(2013,2018,2022)) |> 
+        mutate(yr = as.factor(yr)) |>
+        tbl_summary(include = c(pop,HHincomeMedian,percPoverty,EDUCpercHSplus,EDUCpercBAplus),
+                       statistic = list(all_continuous() ~ "{mean} ({sd})"),
+                    by = yr )
+```
