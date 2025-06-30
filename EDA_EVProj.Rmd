@@ -1,6 +1,6 @@
 ---
 title: "LAs BEST Project"
-author: "Justin Coles, Jessy Garcia, Joseph"
+author: "Justin Coles, Jessy Garcia, Joseph Salamante"
 date: "2025-06-20"
 output:
 html_document: default
@@ -17,7 +17,6 @@ library(dplyr)
 library(gtsummary)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
 
 ```{r}
 getwd()
@@ -42,6 +41,7 @@ summary_stats_allyrs
 #mean(41.90) --> #there are about 41.90 visits to ED per 10,000ppl
 #Sd(28.98) --> there is huge variance between zip codes and ppl in ED 
 ```
+
 ```{r}
 sum(is.na(EV_data))
 ```
@@ -61,10 +61,12 @@ tapply(EV_data$nZEV, EV_data$yr, summary, na.rm = TRUE)
 tapply(EV_data$nZEV, EV_data$yr, sd,      na.rm = TRUE)
 
 ```
+
 ```{r}
 tapply(EV_data$nZEV1000pop , EV_data$yr, summary, na.rm = TRUE) 
 tapply(EV_data$nZEV1000pop , EV_data$yr, sd,      na.rm = TRUE)
 ```
+
 ```{r} 
 tapply(EV_data$pop , EV_data$yr, summary, na.rm = TRUE) 
 tapply(EV_data$pop , EV_data$yr, sd,      na.rm = TRUE)
@@ -94,6 +96,7 @@ tapply(EV_data$EDUCpercHSplus , EV_data$yr, sd,      na.rm = TRUE)
 tapply(EV_data$EDUCpercBAplus , EV_data$yr, summary, na.rm = TRUE) 
 tapply(EV_data$EDUCpercBAplus , EV_data$yr, sd,      na.rm = TRUE)
 ```
+
 ```{r}
 
 #New dataset with just the variables of interest for Corr. Matrix
@@ -115,7 +118,6 @@ corr_EV_data_vars <- EV_data[, c(
 corr_EV_data_matrix <- cor(corr_EV_data_vars, use = "complete.obs")
 print(corr_EV_data_matrix)
 
-
 ```
 
 ```{r}
@@ -133,7 +135,6 @@ EV_data %>%
   
   add_overall()
 
-
 ```
 
 ```{r}
@@ -145,8 +146,6 @@ zip100 <- sample(zip,100)
 
 EV_data_100 = EV_data[EV_data$zip %in% zip100, ]
 EV_data_100$nZEV <- as.numeric(as.character(EV_data_100$nZEV))
-
-
 
 
 p <- ggplot(data = EV_data_100, aes(x = yr, y = nZEV, group = zip)) + 
@@ -217,6 +216,7 @@ geom_point(size = 1.5) +
 theme_minimal()
 p
 ```
+
 ```{r}
 #nZEV spaghetti plot
 EV_data$nZEV <- as.numeric(as.character(EV_data$nZEV))
@@ -264,6 +264,7 @@ mean(EV_data$percPoverty)
 sd(EV_data$percPoverty)
 
 ```
+
 ```{r}
 EV_data |> filter(yr == 2013) |> tbl_summary(include = c(pop,HHincomeMedian,percPoverty,EDUCpercHSplus,EDUCpercBAplus),
                        statistic = list(all_continuous() ~ "{mean} ({sd})"))
