@@ -1,4 +1,4 @@
----
+git ---
 title: "Regression"
 author: "Justin Coles,Jessy Garcia, Joseph Salamante"
 date: "2025-06-30"
@@ -7,5 +7,50 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(magrittr)
+library(dplyr)  
+```
+
+```{r}
+getwd()
+EV_data <- read.csv("./Data/data_ZEV_asthmaED_2013_2022.csv")
+```
+
+```{r}
+#Median income 2013
+
+EV_data_2013 <- EV_data %>%
+  filter(yr == 2013)
+
+model_2013 <- lm(Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate ~ HHincomeMedian, data = EV_data_2013)
+summary(model_2013)
+```
+
+
+```{r}
+#Median income 2022
+EV_data_2022 <- EV_data %>%
+  filter(yr == 2022)
+
+model_2022 <- lm(Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate ~ HHincomeMedian, data = EV_data_2022)
+summary(model_2022)
+
+```
+
+```{r}
+EV_subset <- EV_data %>%
+  filter(yr %in% c(2013, 2022))
+
+ggplot(EV_subset, aes(x = HHincomeMedian,
+                      y = Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate,
+                      color = factor(yr))) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "glm", se = TRUE) +
+  labs(title = "Asthma ED Visit Rate vs Median Income (2013 & 2022)",
+       x = "Median Household Income",
+       y = "Asthma ED Visit Rate",
+       color = "Year") +
+  theme_minimal()
 ```
 
