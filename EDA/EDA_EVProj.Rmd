@@ -4,6 +4,7 @@ author: "Justin Coles, Jessy Garcia, Joseph Salamante"
 date: "2025-06-20"
 output:
 html_document: default
+---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -20,7 +21,7 @@ library(gtsummary)
 
 ```{r}
 getwd()
-EV_data <- read.csv("./Data/data_ZEV_asthmaED_2013_2022.csv")
+EV_data <- read.csv("../Data/data_ZEV_asthmaED_2013_2022.csv")
 ```
 
 ```{r}
