@@ -2,7 +2,9 @@
 title: "Regression"
 author: "Justin Coles,Jessy Garcia, Joseph Salamante"
 date: "2025-06-30"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -13,8 +15,19 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 library(ggplot2)
+library(dplyr) 
+getwd()
+EV_data <- read.csv("./Data/data_ZEV_asthmaED_2013_2022.csv")
 # Income vs. Log Asthma Rate Plot
 # For 2013
+EV_data$nZEV1000pop <- EV_data$nZEV/EV_data$pop *1000
+EV_data$log_AgeAdj_RoA_ED_Visit_Rate <- log(EV_data$Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate)
+EV_data_2013 <- EV_data %>% filter( yr == 2013)
+EV_data_2022 <- EV_data %>% filter( yr == 2022)
+```
+
+```{r}
+
 ggplot(EV_data_2013, aes(x = HHincomeMedian, y = log_AgeAdj_RoA_ED_Visit_Rate)) +
   geom_point(alpha = 0.6) +
   geom_smooth(method = "lm", se = TRUE, color = "blue") +
@@ -23,6 +36,9 @@ ggplot(EV_data_2013, aes(x = HHincomeMedian, y = log_AgeAdj_RoA_ED_Visit_Rate)) 
     x = "Median Household Income ($)",
     y = "Log Asthma ED Visit Rate"
   )
+```
+
+```{r}
 
 # For 2022
 ggplot(EV_data_2022, aes(x = HHincomeMedian, y = log_AgeAdj_RoA_ED_Visit_Rate)) +
@@ -34,19 +50,11 @@ ggplot(EV_data_2022, aes(x = HHincomeMedian, y = log_AgeAdj_RoA_ED_Visit_Rate)) 
     y = "Log Asthma ED Visit Rate"
   )
 
-
-
-
-
 ```
 
 ```{r}
 
-EV_data_2013 <- EV_data %>%
-  filter( yr == 2013)
 lm(EV_data_2013$log_AgeAdj_RoA_ED_Visit_Rate ~ EV_data_2013$percPoverty   , data = EV_data)
-EV_data_2022 <- EV_data %>%
-  filter( yr == 2022)
 lm(EV_data_2022$log_AgeAdj_RoA_ED_Visit_Rate ~ EV_data_2022$percPoverty, data = EV_data)
 
 #Poverty Percentage vs Log Asthma Rate
@@ -72,6 +80,7 @@ ggplot(EV_data_2022, aes(x = percPoverty, y = log_AgeAdj_RoA_ED_Visit_Rate)) +
 
 
 ```
+
 ```{r}
  
 EV_data_2013 <- EV_data %>%
@@ -103,6 +112,7 @@ ggplot(EV_data_2022, aes(x = EDUCpercBAplus, y = log_AgeAdj_RoA_ED_Visit_Rate)) 
   )
 
 ```
+
 ```{r}
 EV_data_2013 <- EV_data %>%
   filter( yr == 2013)
@@ -134,6 +144,7 @@ ggplot(EV_data_2022, aes(x = nZEV1000pop, y = log_AgeAdj_RoA_ED_Visit_Rate)) +
 
 
 ```
+
 ```{r}
 #Mutli Linear Regression Model 2022
 
@@ -149,13 +160,12 @@ exp(-0.093791)
 ```{r}
 #Mutli Linear Regression Model 2022 No SES
 
-
 multi_model_2022 <- lm(log_AgeAdj_RoA_ED_Visit_Rate ~ I(nZEV1000pop/10), data= EV_data_2022)
 
 summary(multi_model_2022)
 
 exp(-0.128381)
 
-(1-  0.8795182) *100
+(1 - 0.8795182) * 100
 ```
 
