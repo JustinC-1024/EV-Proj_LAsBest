@@ -43,22 +43,30 @@ EV_data_2022 <- EV_data %>%
 
 model_2022 <- lm(log_AgeAdj_RoA_ED_Visit_Rate ~ I(nZEV1000pop/10) + EDUCpercBAplus, data = EV_data_2022)
 summary(model_2022)
-```
-```{r}
 
+(1- exp(-0.0349378)) * 100
+```
+
+```{r}
+#nZEV vs ED based on Median Income
 EV_data_2022 <- EV_data %>%
   filter(yr == 2022)
 
 model_2022 <- lm(log_AgeAdj_RoA_ED_Visit_Rate ~ I(nZEV1000pop/10) + HHincomeMedian, data = EV_data_2022)
 summary(model_2022)
+
+(exp(0.005608) - 1) * 100
 ```
 
 ```{r}
+#nZEV vs ED based on percent of poverty
 EV_data_2022 <- EV_data %>%
   filter(yr == 2022)
 
 model_2022 <- lm(log_AgeAdj_RoA_ED_Visit_Rate ~ I(nZEV1000pop/10) + percPoverty, data = EV_data_2022)
 summary(model_2022)
+
+(1- exp(-0.093791)) * 100
 ```
 
 ```{r}
