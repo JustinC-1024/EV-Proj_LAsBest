@@ -45,8 +45,8 @@ EV_subset <- EV_data %>%
 ggplot(EV_subset, aes(x = HHincomeMedian,
                       y = Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate,
                       color = factor(yr))) +
-  geom_point(alpha = 0.6) +
-  geom_smooth(method = "glm", se = TRUE) +
+  geom_point(alpha = 0.15) +
+  geom_smooth(method = "lm", se = TRUE) +
   labs(title = "Asthma ED Visit Rate vs Median Income (2013 & 2022)",
        x = "Median Household Income",
        y = "Asthma ED Visit Rate",
