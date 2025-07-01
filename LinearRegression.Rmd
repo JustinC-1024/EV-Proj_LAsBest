@@ -10,32 +10,55 @@ knitr::opts_chunk$set(echo = TRUE)
 library(ggplot2)
 library(magrittr)
 library(dplyr)  
+library(gtsummary)
 ```
 
 ```{r}
 getwd()
 EV_data <- read.csv("./Data/data_ZEV_asthmaED_2013_2022.csv")
 ```
+```{r}
+#Getting number of EVs per 1000 people
+EV_data$nZEV1000pop <- EV_data$nZEV/EV_data$pop *1000
+#RoA = Rate of Asthma
+EV_data$log_AgeAdj_RoA_ED_Visit_Rate <- log(EV_data$Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate)
+#Getting LN to help create better plots 
+```
 
 ```{r}
 #Median income 2013
 
-EV_data_2013 <- EV_data %>%
-  filter(yr == 2013)
+#EV_data_2013 <- EV_data %>%
+#  filter(yr == 2013)
 
-model_2013 <- lm(Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate ~ HHincomeMedian, data = EV_data_2013)
-summary(model_2013)
+#model_2013 <- lm(log_AgeAdj_RoA_ED_Visit_Rate ~ nZEV1000pop, data = EV_data_2013)
+#summary(model_2013)
 ```
 
 
 ```{r}
-#Median income 2022
+#nZEV vs ED based on EDUBA
 EV_data_2022 <- EV_data %>%
   filter(yr == 2022)
 
-model_2022 <- lm(Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate ~ HHincomeMedian, data = EV_data_2022)
+model_2022 <- lm(log_AgeAdj_RoA_ED_Visit_Rate ~ I(nZEV1000pop/10) + EDUCpercBAplus, data = EV_data_2022)
 summary(model_2022)
+```
+```{r}
 
+EV_data_2022 <- EV_data %>%
+  filter(yr == 2022)
+
+model_2022 <- lm(log_AgeAdj_RoA_ED_Visit_Rate ~ I(nZEV1000pop/10) + HHincomeMedian, data = EV_data_2022)
+summary(model_2022)
+```
+
+```{r}
+EV_data_2022 <- EV_data %>%
+  filter(yr == 2022)
+
+model_2022 <- lm(log_AgeAdj_RoA_ED_Visit_Rate ~ I(nZEV1000pop/10) + percPoverty, data = EV_data_2022)
+summary(model_2022)
 ```
 
 ```{r}
@@ -53,4 +76,3 @@ ggplot(EV_subset, aes(x = HHincomeMedian,
        color = "Year") +
   theme_minimal()
 ```
-
