@@ -9,14 +9,10 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r}
-V_data_2013 <- EV_data %>%
-  filter( yr == 2013)
-lm(EV_data_2013$log_AgeAdj_RoA_ED_Visit_Rate ~ EV_data_2013$HHincomeMedian, data = EV_data)
-EV_data_2022 <- EV_data %>%
-  filter( yr == 2022)
-lm(EV_data_2022$log_AgeAdj_RoA_ED_Visit_Rate ~ EV_data_2022$HHincomeMedian, data = EV_data)
 
+
+```{r}
+library(ggplot2)
 # Income vs. Log Asthma Rate Plot
 # For 2013
 ggplot(EV_data_2013, aes(x = HHincomeMedian, y = log_AgeAdj_RoA_ED_Visit_Rate)) +
@@ -137,8 +133,29 @@ ggplot(EV_data_2022, aes(x = nZEV1000pop, y = log_AgeAdj_RoA_ED_Visit_Rate)) +
   )
 
 
-
-
 ```
+```{r}
+#Mutli Linear Regression Model 2022
+
+multi_model_2022_poverty <- lm(log_AgeAdj_RoA_ED_Visit_Rate ~ I(nZEV1000pop/10)   +  percPoverty, data= EV_data_2022)
+
+exp(-0.093791) 
+
+(1- 0.910473) *100
+```
+
+
+
+```{r}
+#Mutli Linear Regression Model 2022 No SES
+
+
+multi_model_2022 <- lm(log_AgeAdj_RoA_ED_Visit_Rate ~ I(nZEV1000pop/10), data= EV_data_2022)
+
+summary(multi_model_2022)
+
+exp(-0.128381)
+
+(1-  0.8795182) *100
 ```
 
