@@ -9,3 +9,136 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r}
+V_data_2013 <- EV_data %>%
+  filter( yr == 2013)
+lm(EV_data_2013$log_AgeAdj_RoA_ED_Visit_Rate ~ EV_data_2013$HHincomeMedian, data = EV_data)
+EV_data_2022 <- EV_data %>%
+  filter( yr == 2022)
+lm(EV_data_2022$log_AgeAdj_RoA_ED_Visit_Rate ~ EV_data_2022$HHincomeMedian, data = EV_data)
+
+# Income vs. Log Asthma Rate Plot
+# For 2013
+ggplot(EV_data_2013, aes(x = HHincomeMedian, y = log_AgeAdj_RoA_ED_Visit_Rate)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = TRUE, color = "blue") +
+  labs(
+    title = "2013: Median Income vs Log Asthma ED Visit Rate",
+    x = "Median Household Income ($)",
+    y = "Log Asthma ED Visit Rate"
+  )
+
+# For 2022
+ggplot(EV_data_2022, aes(x = HHincomeMedian, y = log_AgeAdj_RoA_ED_Visit_Rate)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = TRUE, color = "darkgreen") +
+  labs(
+    title = "2022: Median Income vs Log Asthma ED Visit Rate",
+    x = "Median Household Income ($)",
+    y = "Log Asthma ED Visit Rate"
+  )
+
+
+
+
+
+```
+
+```{r}
+
+EV_data_2013 <- EV_data %>%
+  filter( yr == 2013)
+lm(EV_data_2013$log_AgeAdj_RoA_ED_Visit_Rate ~ EV_data_2013$percPoverty   , data = EV_data)
+EV_data_2022 <- EV_data %>%
+  filter( yr == 2022)
+lm(EV_data_2022$log_AgeAdj_RoA_ED_Visit_Rate ~ EV_data_2022$percPoverty, data = EV_data)
+
+#Poverty Percentage vs Log Asthma Rate
+# 2013
+ggplot(EV_data_2013, aes(x = percPoverty, y = log_AgeAdj_RoA_ED_Visit_Rate)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", color = "red") +
+  labs(
+    title = "2013: Poverty % vs Log Asthma ED Visit Rate",
+    x = "% Below Poverty Line",
+    y = "Log Asthma ED Visit Rate"
+  )
+
+# 2022
+ggplot(EV_data_2022, aes(x = percPoverty, y = log_AgeAdj_RoA_ED_Visit_Rate)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", color = "purple") +
+  labs(
+    title = "2022: Poverty % vs Log Asthma ED Visit Rate",
+    x = "% Below Poverty Line",
+    y = "Log Asthma ED Visit Rate"
+  )
+
+
+```
+```{r}
+ 
+EV_data_2013 <- EV_data %>%
+  filter( yr == 2013)
+lm(EV_data_2013$log_AgeAdj_RoA_ED_Visit_Rate ~ EV_data_2013$EDUCpercBAplus   , data = EV_data)
+EV_data_2022 <- EV_data %>%
+  filter( yr == 2022)
+lm(EV_data_2022$log_AgeAdj_RoA_ED_Visit_Rate ~ EV_data_2022$EDUCpercBAplus, data = EV_data)
+
+#BA Education vs Log Asthma Rate 
+# 2013
+ggplot(EV_data_2013, aes(x = EDUCpercBAplus, y = log_AgeAdj_RoA_ED_Visit_Rate)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", color = "orange") +
+  labs(
+    title = "2013: % with BA+ vs Log Asthma ED Visit Rate",
+    x = "% with Bachelor's or Higher",
+    y = "Log Asthma ED Visit Rate"
+  )
+
+# 2022
+ggplot(EV_data_2022, aes(x = EDUCpercBAplus, y = log_AgeAdj_RoA_ED_Visit_Rate)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", color = "darkorange") +
+  labs(
+    title = "2022: % with BA+ vs Log Asthma ED Visit Rate",
+    x = "% with Bachelor's or Higher",
+    y = "Log Asthma ED Visit Rate"
+  )
+
+```
+```{r}
+EV_data_2013 <- EV_data %>%
+  filter( yr == 2013)
+lm(EV_data_2013$log_AgeAdj_RoA_ED_Visit_Rate ~ EV_data_2013$nZEV1000pop   , data = EV_data)
+EV_data_2022 <- EV_data %>%
+  filter( yr == 2022)
+lm(EV_data_2022$log_AgeAdj_RoA_ED_Visit_Rate ~ EV_data_2022$nZEV1000pop , data = EV_data)
+
+# ZEVs per 1,000 vs Log Asthma
+# 2013
+ggplot(EV_data_2013, aes(x = nZEV1000pop, y = log_AgeAdj_RoA_ED_Visit_Rate)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", color = "steelblue") +
+  labs(
+    title = "2013: ZEVs per 1,000 People vs Log Asthma Rate",
+    x = "ZEVs per 1,000 People",
+    y = "Log Asthma ED Visit Rate"
+  )
+
+# 2022
+ggplot(EV_data_2022, aes(x = nZEV1000pop, y = log_AgeAdj_RoA_ED_Visit_Rate)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", color = "forestgreen") +
+  labs(
+    title = "2022: ZEVs per 1,000 People vs Log Asthma Rate",
+    x = "ZEVs per 1,000 People",
+    y = "Log Asthma ED Visit Rate"
+  )
+
+
+
+
+```
+```
+
