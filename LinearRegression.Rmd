@@ -170,3 +170,42 @@ exp(-0.128381)
 (1 - 0.8795182) * 100
 ```
 
+```{r}
+# more data processing
+EV_data$yrC <- EV_data$yr - 2013 # create a year variable centered at the first study year, 2013
+EV_data$yrC2 <- EV_data$yrC^2 # squared centered year term to allow for nonlinear trends in time
+EV_data$yrC3 <- EV_data$yrC^3 # cubic centered year term to allow for nonlinear trends in time (you might add this too!)
+
+# code for random intercept longitudinal model (I'll draw this on the board for you)
+
+# load nlme package to fit random effects (longitudinal) model
+library(nlme)
+
+# requires dataset to be non-missing in included variables
+d_complete <- subset(EV_data,!is.na(nZEV1000pop) & !is.na(percPoverty))
+
+# fit model, with random intercept for zip
+fit1 <- lme(log_AgeAdj_RoA_ED_Visit_Rate ~ nZEV1000pop + yrC + yrC2 + EDUCpercBAplus,
+                            random=list(~1|zip),# random intercept at zip code level
+                            data=d_complete,
+                            method="REML")
+summary(fit1)
+intervals(fit1)
+
+#class(d_complete$zip)
+#factor(d_complete$zip)
+
+# fit another model, with also a random slope on year
+fit2 <- lme(log_AgeAdj_RoA_ED_Visit_Rate ~ nZEV1000pop + yrC + yrC2 + EDUCpercBAplus,
+    #control=c(maxIter=5000),        
+                            random=list(~yrC|zip),# random intercept at zip code level
+                            data=d_complete,
+                            method="REML")
+summary(fit2)
+intervals(fit2)
+
+exp(0.002267749)
+(1.00227-1) * 100
+
+```
+
