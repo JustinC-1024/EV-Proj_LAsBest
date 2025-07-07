@@ -4,7 +4,6 @@ author: "Justin Coles,Jessy Garcia, Joseph Salamante"
 date: "2025-06-30"
 output:
   pdf_document: default
-  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -145,17 +144,44 @@ ggplot(EV_data_2022, aes(x = nZEV1000pop, y = log_AgeAdj_RoA_ED_Visit_Rate)) +
 
 
 ```
+```{r}
+ pov <-lm(log_AgeAdj_RoA_ED_Visit_Rate ~ I(nZEV1000pop/10) + percPoverty, data= EV_data_2022)
+
+ HH <- lm(log_AgeAdj_RoA_ED_Visit_Rate ~I(nZEV1000pop/10) + HHincomeMedian, data= EV_data_2022)
+
+ EDUC <- lm(log_AgeAdj_RoA_ED_Visit_Rate ~ I(nZEV1000pop/10) +EDUCpercBAplus, data= EV_data_2022)
+ 
+ summary(pov)
+  summary(HH)
+   summary(EDUC)
+
+
+```
+```{r}
+exp(-5.608e-02)
+exp(-0.0349378)
+
+1-0.9454635
+1-0.9656655
+
+0.0545365 *100
+0.0343345 *100
+```
+
 
 ```{r}
 #Mutli Linear Regression Model 2022
 
 multi_model_2022_poverty <- lm(log_AgeAdj_RoA_ED_Visit_Rate ~ I(nZEV1000pop/10)   +  percPoverty, data= EV_data_2022)
 
+summary(multi_model_2022_poverty)
+```
+
+```{r}
 exp(-0.093791) 
 
 (1- 0.910473) *100
 ```
-
 
 
 ```{r}
@@ -164,9 +190,13 @@ exp(-0.093791)
 multi_model_2022 <- lm(log_AgeAdj_RoA_ED_Visit_Rate ~ I(nZEV1000pop/10), data= EV_data_2022)
 
 summary(multi_model_2022)
+```
 
+```{r}
 exp(-0.128381)
 
 (1 - 0.8795182) * 100
 ```
+```
+
 
