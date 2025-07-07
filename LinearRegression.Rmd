@@ -8,7 +8,18 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
+```{r}
+library(ggplot2)
+library(dplyr) 
+getwd()
+EV_data <- read.csv("./Data/data_ZEV_asthmaED_2013_2022.csv")
+# Income vs. Log Asthma Rate Plot
+# For 2013
+EV_data$nZEV1000pop <- EV_data$nZEV/EV_data$pop *1000
+EV_data$log_AgeAdj_RoA_ED_Visit_Rate <- log(EV_data$Age_Adjusted_Rate_of_Asthma_ED_Visit_Rate)
+EV_data_2013 <- EV_data %>% filter( yr == 2013)
+EV_data_2022 <- EV_data %>% filter( yr == 2022)
+```
 
 
 ```{r}
