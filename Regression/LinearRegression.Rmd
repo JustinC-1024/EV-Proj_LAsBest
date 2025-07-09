@@ -197,7 +197,6 @@ exp(-0.128381)
 
 (1 - 0.8795182) * 100
 ```
-```
 
 
 ```{r}
@@ -212,7 +211,7 @@ EV_data$yrC3 <- EV_data$yrC^3 # cubic centered year term to allow for nonlinear 
 library(nlme)
 
 # requires dataset to be non-missing in included variables
-d_complete <- subset(EV_data,!is.na(nZEV1000pop) & !is.na(percPoverty))
+d_complete <- subset(EV_data,!is.na(nZEV1000pop) & !is.na(EDUCpercBAplus))
 
 # fit model, with random intercept for zip
 fit1 <- lme(log_AgeAdj_RoA_ED_Visit_Rate ~ nZEV1000pop + yrC + yrC2 + EDUCpercBAplus,
@@ -234,7 +233,7 @@ fit2 <- lme(log_AgeAdj_RoA_ED_Visit_Rate ~ nZEV1000pop + yrC + yrC2 + EDUCpercBA
 summary(fit2)
 intervals(fit2)
 
-exp(0.002267749)
+exp(0.002268)
 (1.00227-1) * 100
 
 ```
